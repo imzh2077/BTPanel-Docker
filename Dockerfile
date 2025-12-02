@@ -134,3 +134,8 @@ RUN chown searxng:searxng /etc/searxng/settings.yml /etc/uwsgi/apps-available/se
 RUN chown searxng:searxng /etc/searxng/settings.yml /etc/uwsgi/apps-available/searxng.ini && \
     # 替换settings.yml中的密钥（如果有占位符）
     sed -i "s/ultrasecretkey/$(openssl rand -hex 16)/g" /etc/searxng/settings.yml
+
+#安装kubectl
+RUN curl -LO "https://dl.k8s.io/release/v1.28.11/bin/linux/amd64/kubectl" && \
+    install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
+    rm kubectl
