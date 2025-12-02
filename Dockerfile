@@ -1,4 +1,4 @@
-FROM debian:bookworm-slim
+FROM debian:trixie-slim
 
 # 更新包列表并安装依赖
 RUN set -eux; \
@@ -74,7 +74,7 @@ HEALTHCHECK --interval=5s --timeout=3s CMD prot="http"; if [ -f "/www/server/pan
 # 安装Gitea
 RUN set -eux; \
     adduser --system --shell /bin/bash --gecos 'Git Version Control' --group --disabled-password --home /home/git git; \
-    wget -O /usr/local/bin/gitea https://dl.gitea.com/gitea/1.24.6/gitea-1.24.6-linux-amd64; \
+    wget -O /usr/local/bin/gitea https://dl.gitea.com/gitea/1.25.2/gitea-1.24.6-linux-amd64; \
     chmod +x /usr/local/bin/gitea
 
 # 安装SearXNG
