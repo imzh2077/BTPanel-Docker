@@ -16,7 +16,7 @@ RUN set -eux; \
       locales wget iproute2 openssh-server cmake make gcc g++ autoconf sudo curl dos2unix build-essential libonig-dev libxml2-dev libxslt-dev \
       docker-ce-cli \
       iputils-ping dnsutils net-tools iproute2 curl wget tcpdump netcat-openbsd traceroute mtr-tiny iperf3 nmap telnet openssh-client ca-certificates \ 
-      htop iotop lsof procps sysstat file tree vim nano; \
+      htop iotop lsof procps sysstat file tree vim nano unzip; \
     sed -i 's/^# *\(en_US.UTF-8 UTF-8\)/\1/' /etc/locale.gen; \
     locale-gen en_US.UTF-8; \
     update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8; \
@@ -139,3 +139,13 @@ RUN chown searxng:searxng /etc/searxng/settings.yml /etc/uwsgi/apps-available/se
 RUN curl -LO "https://dl.k8s.io/release/v1.28.11/bin/linux/amd64/kubectl" && \
     install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
     rm kubectl
+
+# 安装UptimeKuma
+RUN set -eux && \
+    adduser --system --shell /bin/bash --gecos 'Kuma' --group --disabled-password --home /home/kuma kuma && \
+    wget -O /tmp/kuma.zip https://github.com/louislam/uptime-kuma/archive/refs/tags/2.0.2.zip && \
+    unzip /tmp/kuma.zip -d /usr/local/bin && \
+    mv /usr/local/bin/uptime-kuma-2.0.2 /usr/local/bin/uptime-kuma && \
+    cd /usr/local/bin/uptime-kuma-2.0.2 && \
+    npm install && \
+    npm run setup
