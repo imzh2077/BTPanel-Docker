@@ -146,6 +146,6 @@ RUN set -eux && \
     wget -O /tmp/kuma.zip https://github.com/louislam/uptime-kuma/archive/refs/tags/2.0.2.zip && \
     unzip /tmp/kuma.zip -d /usr/local/bin && \
     mv /usr/local/bin/uptime-kuma-2.0.2 /usr/local/bin/uptime-kuma && \
-    cd /usr/local/bin/uptime-kuma-2.0.2 && \
+    cd /usr/local/bin/uptime-kuma && \
     npm install && \
     npm run setup
