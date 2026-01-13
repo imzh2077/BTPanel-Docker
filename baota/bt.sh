@@ -110,7 +110,7 @@ init_panel > /dev/null
 # 启动自定义脚本，如果存在则后台执行，即使失败也不影响
 if [ -f /www/start-software.sh ]; then
     echo "启动自定义脚本..."
-    chown +x /www/start-software.sh
+    chmod +x /www/start-software.sh
     bash /www/start-software.sh > /dev/null 2>&1 &
 else
     echo "自定义脚本不存在，跳过..."
