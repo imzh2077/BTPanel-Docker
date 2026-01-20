@@ -143,8 +143,8 @@ RUN curl -LO "https://dl.k8s.io/release/v1.28.11/bin/linux/amd64/kubectl" && \
 # 安装UptimeKuma
 RUN set -eux && \
     adduser --system --shell /bin/bash --gecos 'Kuma' --group --disabled-password --home /home/kuma kuma && \
-    wget -O /tmp/kuma.zip https://github.com/louislam/uptime-kuma/archive/refs/tags/2.0.2.zip && \
-    unzip /tmp/kuma.zip -d /usr/local/bin && \
+    wget -O /tmp/kuma.tar.gz https://github.com/louislam/uptime-kuma/archive/refs/tags/2.1.0-beta.2.tar.gz && \
+    tar xzvf /tmp/kuma.tar.gz -C /usr/local/bin && \
     mv /usr/local/bin/uptime-kuma-2.0.2 /usr/local/bin/uptime-kuma && \
     cd /usr/local/bin/uptime-kuma && \
     npm install && \
