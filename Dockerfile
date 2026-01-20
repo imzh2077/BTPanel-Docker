@@ -148,6 +148,6 @@ RUN set -eux && \
     mv /usr/local/bin/uptime-kuma-2.0.2 /usr/local/bin/uptime-kuma && \
     cd /usr/local/bin/uptime-kuma && \
     npm install && \
-    wget -O /tmp/dist.tar.gz https://github.com/louislam/uptime-kuma/releases/download/2.0.2/dist.tar.gz && \
+    wget -O /tmp/dist.tar.gz https://github.com/louislam/uptime-kuma/releases/download/2.1.0-beta.2/dist.tar.gz && \
     tar xzvf /tmp/dist.tar.gz -C /usr/local/bin/uptime-kuma && \
     chown -R kuma:kuma /usr/local/bin/uptime-kuma
