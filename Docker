@@ -1,7 +1,9 @@
 FROM centos:7
 
 # 切换 Debian 镜像源为腾讯云源，更新包列表并安装依赖
-RUN yum clean all && yum makecache fast \
+RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-* \
+    && sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-* \
+    && yum clean all && yum makecache fast \
     && yum -y update \
     && yum -y install \
     glibc-langpack-en \
