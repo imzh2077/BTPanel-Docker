@@ -1,0 +1,51 @@
+FROM centos:7
+
+# 切换 Debian 镜像源为腾讯云源，更新包列表并安装依赖
+RUN yum clean all && yum makecache fast \
+    && yum -y update \
+    && yum -y install \
+    glibc-langpack-en \
+    wget iproute openssh-server gd-devel cmake make gcc gcc-c++ autoconf \
+    libsodium-devel oniguruma-devel libssh2-devel c-ares-devel libaio-devel sudo curl dos2unix \
+    automake cronie bzip2 libzip-devel glibc-devel bison file rcconf flex vim m4 gawk less cpp binutils \
+    diffutils unzip tar bzip2-devel ncurses ncurses-devel libtool libevent-devel openssl-devel cyrus-sasl-devel \
+    libltdl-devel zlib-devel glib2 glib2-devel krb5-devel postgresql-devel postgresql gettext libcap-devel \
+    libc-client-devel psmisc patch git e2fsprogs libxslt-devel xz gd libwebp-devel libvpx-devel \
+    freetype-devel libjpeg-turbo libjpeg-turbo-devel iptables libudev-devel openldap-devel \
+    build-essential re2c \
+    && yum clean all
+
+# 复制脚本
+COPY ["bt.sh", "/"]
+
+# 转换启动脚本
+RUN dos2unix /bt.sh && dos2unix /init_mysql.sh
+
+# 下载并安装宝塔面板及 lnmp 环境
+RUN curl -sSO https://download.bt.cn/install/installStable.sh \
+    && echo y | bash installStable.sh -P 8888 --ssl-disable \
+    && btpip config set global.index-url https://mirrors.tencent.com/pypi/simple \
+    && rm -rf /www/server/data/ \
+    && echo "docker_bt_10.0_lts" > /www/server/panel/data/o.pl \
+    && echo '["memuA", "memuAsite", "memuAdatabase", "memuAcontrol", "memuAfiles", "memuAlogs", "memuAxterm", "memuAcrontab", "memuAsoft", "memuAconfig", "dologin", "memu_btwaf", "memuAssl"]' > /www/server/panel/config/show_menu.json \
+    && chmod +x /bt.sh \
+    
+
+# 配置宝塔面板安全入口和用户名及密码，以及 SSH 密码
+RUN echo btpanel | bt 6 \
+    && echo btpaneldocker | bt 5 \
+    && echo "/btpanel" > /www/server/panel/data/admin_path.pl \
+    && echo "root:btpaneldocker" | chpasswd
+    
+# 打包宝塔面板，并清除www
+RUN bt 2 \
+    && tar -zcf /www.tar.gz /www \
+    && rm -rf /www
+
+ENTRYPOINT ["/bin/sh","-c","/bt.sh"]
+
+# 暴漏特定端口
+EXPOSE 22 80 443 888 3306 8888
+
+# 健康检查
+HEALTHCHECK --interval=5s --timeout=3s CMD prot="http"; if [ -f "/www/server/panel/data/ssl.pl" ]; then prot="https"; fi; curl -k -i $prot://127.0.0.1:$(cat /www/server/panel/data/port.pl)$(cat /www/server/panel/data/admin_path.pl) | grep -E '(200|404)' || exit 1
