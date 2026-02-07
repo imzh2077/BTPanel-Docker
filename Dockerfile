@@ -143,11 +143,12 @@ RUN curl -LO "https://dl.k8s.io/release/v1.28.11/bin/linux/amd64/kubectl" && \
 # 安装UptimeKuma
 RUN set -eux && \
     adduser --system --shell /bin/bash --gecos 'Kuma' --group --disabled-password --home /home/kuma kuma && \
-    wget -O /tmp/kuma.tar.gz https://github.com/louislam/uptime-kuma/archive/refs/tags/2.1.0-beta.2.tar.gz && \
+    wget -O /tmp/kuma.tar.gz https://github.com/louislam/uptime-kuma/archive/refs/tags/2.1.0.tar.gz && \
     tar xzvf /tmp/kuma.tar.gz -C /usr/local/bin && \
-    mv /usr/local/bin/uptime-kuma-2.1.0-beta.2 /usr/local/bin/uptime-kuma && \
+    mv /usr/local/bin/uptime-kuma-2.1.0 /usr/local/bin/uptime-kuma && \
     cd /usr/local/bin/uptime-kuma && \
     npm install && \
-    wget -O /tmp/dist.tar.gz https://github.com/louislam/uptime-kuma/releases/download/2.1.0-beta.2/dist.tar.gz && \
+    wget -O /tmp/dist.tar.gz https://github.com/louislam/uptime-kuma/releases/download/2.1.0/dist.tar.gz && \
     tar xzvf /tmp/dist.tar.gz -C /usr/local/bin/uptime-kuma && \
-    chown -R kuma:kuma /usr/local/bin/uptime-kuma
+    chown -R kuma:kuma /usr/local/bin/uptime-kuma && \
+    rm -rf /tmp/*
